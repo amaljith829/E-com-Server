@@ -39,7 +39,21 @@ const addToCart = async (req, res) => {
     }
     }
 
+  const getCart = async (req, res) => {
+     try {
+        const cart = await Cart.findOne({ userId: req.user._id }).populate({path:'products.productId', model: 'Product',select:'name price image -_id'});
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching cart', error });
+    }
+    }
+      
+    
+
 module.exports = {
-    addToCart,
+    addToCart,getCart
 };
 
